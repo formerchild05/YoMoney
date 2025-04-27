@@ -1,0 +1,41 @@
+body, html {
+     margin: 0;
+     padding: 0;
+     height: 100%;
+ }
+.vALG {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.hALG {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+a {
+    text-decoration: none;
+}
+.backgr {
+    background-image: url("../img/shit.jpg");
+    background-size: cover; /* Để ảnh bao phủ toàn bộ */
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+}
+
+.navElement {
+    margin: 10px;
+    padding: 60px; /* Thêm padding để phần tử có kích thước rõ ràng */
+    border: 2px solid #ff9595; /* Đặt border để dễ nhìn thấy */
+    background-color: #c8fffa;
+    color: #000000; /* Đảm bảo chữ dễ nhìn */
+    font-size: 60px;
+    text-align: center;
+    width: 60px; /* Đặt chiều rộng cố định */
+    height: 60px; /* Đặt chiều cao cố định */
+}
+.navElement:hover {
+    background-color: #8efff9;
+    cursor:pointer;
+}

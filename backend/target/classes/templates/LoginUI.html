@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+        <div class="center vALG">
+
+            <form class="vALG" action="/login" method="POST">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <br>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <br>
+
+                <div>
+                    <button type="submit">Login</button>
+                    <a href="/register">
+                        <button type="button">Register</button>
+                    </a>
+                </div>
+
+            </form>
+            <div>
+                <p th:text="${message}">cxzccccccccccccccccccccccc</p>
+            </div>
+        </div>
+</body>
+</html>
