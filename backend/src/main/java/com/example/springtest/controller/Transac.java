@@ -1,0 +1,80 @@
+package com.example.springtest.controller;
+
+import com.example.springtest.service.TransService;
+import com.example.springtest.service.dto.ResponseTransactionDTO;
+import com.example.springtest.service.dto.TransDTO;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RequestMapping("/main")
+@RestController
+public class Transac {
+    TransService transService;
+
+    public Transac(TransService transService) {
+        this.transService = transService;
+    }
+
+    @GetMapping("/getTransactionAll/{user_id}")
+    public ResponseEntity<?> getTransaction(@PathVariable Integer user_id) {
+        ResponseTransactionDTO res = transService.getTransactionAllByUserId(user_id);
+        return ResponseEntity.ok().body(res);
+    }
+
+    /**
+     * body requiered {
+     *     transaction ID:
+     *     type:
+     *     amount:
+     *     description:
+     *     categoryName:
+     * }
+     * @param user_id
+     * @param transDTO
+     * @return
+     */
+    @PutMapping("updateTransaction/{user_id}")
+    public ResponseEntity<?> updateTransaction(@PathVariable Integer user_id,
+                                               @RequestBody TransDTO transDTO
+                                               ) {
+        try {
+            return ResponseEntity.ok().body(transService.updateTransaction(user_id, transDTO));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    /**
+     * body required {
+     *     description :
+     *     category name:
+     *     amount:
+     *     type:
+     * }
+     * @param user_id
+     * @param transDTO
+     * @return
+     */
+    @PostMapping("createTransaction/{user_id}")
+    public ResponseEntity<?> createTransaction(@PathVariable Integer user_id,
+                                               @RequestBody TransDTO transDTO) {
+        try {
+            transService.createTransaction(user_id, transDTO);
+            return ResponseEntity.ok(HttpStatus.CREATED);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    /**
+     * need transaction id to delete
+     * @param transaction_id
+     * @return
+     */
+    @DeleteMapping("deleteTransaction/{transaction_id}")
+    public ResponseEntity<?> deleteTransaction(@PathVariable Integer transaction_id) {
+        transService.deleteTransaction(transaction_id);
+        return ResponseEntity.ok().body("delete Successfully");
+    }
+}

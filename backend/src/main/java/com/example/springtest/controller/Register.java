@@ -1,34 +1,31 @@
 package com.example.springtest.controller;
 
-import com.example.springtest.model.User;
-import com.example.springtest.repository.UserRepository;
-import com.example.springtest.service.DBservice;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import com.example.springtest.service.UserService;
+import com.example.springtest.service.dto.UserDTO;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+
+@RestController
+@RequestMapping("/LandPage")
 public class Register {
-    @Autowired
-    DBservice dbservice;
 
-    @GetMapping("/register")
-    public String register(Model model) {
-        return "registerUI";
+    UserService userService;
+
+    Register(UserService userService) {
+        this.userService = userService;
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute User user, Model model) {
-        if (dbservice.createUser(user)) {
-            model.addAttribute("status", "success");
-            return "registerUI";
-        } else {
-            model.addAttribute("status", "Username already exists");
-            return "registerUI";
+    public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO)  {
+        try {
+            userService.Register(userDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
+        } catch(Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
+
     }
 
 }

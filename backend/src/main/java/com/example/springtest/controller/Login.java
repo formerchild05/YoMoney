@@ -1,33 +1,56 @@
 package com.example.springtest.controller;
 
 import com.example.springtest.model.LoginRequest;
-import com.example.springtest.service.Auth;
+import com.example.springtest.service.UserService;
+import com.example.springtest.service.dto.UserDTO;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+
+@RequestMapping("/LandPage")
+@RestController
 public class Login {
-    @Autowired
-    private Auth auth;
 
-    @GetMapping("/page2")
-    public String page2(Model model) {
-        model.addAttribute("message", "");
-        return "LoginUI";
-    }
+    @Autowired
+    private UserService userService;
+
+
+    /**
+     * instead using jwt, use userId to save localstorage ( jwt maby later ??? )
+     * @param loginRequest
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/login")
-    public String login(@ModelAttribute LoginRequest loginRequest, Model model) {
-        if (auth.login(loginRequest)) {
-            model.addAttribute("message", "You have successfully logged in!");
-            return "main";
-        } else {
-            model.addAttribute("message", "You have failed!");
-            return "LoginUI";
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) throws Exception {
+
+        try {
+            UserDTO user = userService.Login(loginRequest);
+            return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse("logged in successfully", user));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+}
+
+
+    @Getter
+    @Setter
+    public static class LoginResponse {
+        private String message;
+        private UserDTO user;
+
+        public LoginResponse(String message, UserDTO u) {
+            this.message = message;
+            this.user = u;
         }
     }
 
+    @GetMapping("/test")
+    public ResponseEntity<?> test() {
+        return ResponseEntity.ok().body(new UserDTO(1, "zxc"));
+    }
 }
