@@ -11,7 +11,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./expensedmp.sql:/docker-entrypoint-initdb.d/expensedmp.sql
+#      - ./expensedmp.sql:/docker-entrypoint-initdb.d/expensedmp.sql
 
   springboot:
     build: .

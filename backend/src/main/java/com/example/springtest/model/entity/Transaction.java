@@ -19,10 +19,11 @@ public class Transaction extends BaseEntity {
     @Id
     @Column(name = "transaction_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer transactionId;
+    private Long transactionId;
 
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "category_name", nullable = false)
     private String categoryName;
@@ -31,7 +32,7 @@ public class Transaction extends BaseEntity {
     private double amount;
 
     @Column(name = "description")
-    private String description;
+    private String description = "";
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)

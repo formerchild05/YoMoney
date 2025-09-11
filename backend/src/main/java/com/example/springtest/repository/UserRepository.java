@@ -10,21 +10,5 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    User findByUserId(Integer userId);
-
     User findByUsername(String username);
-
-    User findByEmail(String email);
-
-    List<User> findByCreatedAt(LocalDateTime createdAt, Sort sort);
-
-    void delete(User user);
-
-
-    /**
-     * save() -> co id thi = update, nguoc lai la insert
-     * @param user
-     * @return
-     */
-    User save(User user);
 }
