@@ -8,14 +8,17 @@ import com.example.springtest.service.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 
-@RequestMapping("/api")
+
+@RequestMapping("/api/auth")
 @RestController
 public class Auth {
 
@@ -50,7 +53,9 @@ public class Auth {
         final String token = jwtUtil.generateToken(userDetails);
 
         return ResponseEntity.ok().body(token);
+
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
     }
@@ -60,12 +65,26 @@ public class Auth {
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         try {
             userService.saveUser(userDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "Register sucess"));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Username or email already exist"));
+        }
+    }
+
+
+
+    @PostMapping("/registerAdmin")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> registerAdmin(@RequestBody UserDTO userDTO) {
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        try {
+            userService.saveAdmin(userDTO);
             return ResponseEntity.status(HttpStatus.OK).body("register success");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("username or email already exist");
         }
     }
-
 
     @GetMapping("/test")
     public ResponseEntity<?> test() {

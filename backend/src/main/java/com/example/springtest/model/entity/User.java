@@ -36,6 +36,10 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactionList = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Roles role;
+
     @Override
     public String toString() {
         return "user_id=" + userId

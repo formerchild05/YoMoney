@@ -3,7 +3,7 @@ package com.example.springtest.service;
 import com.example.springtest.model.entity.CatType;
 import com.example.springtest.model.entity.Transaction;
 import com.example.springtest.repository.TransactionRepository;
-import com.example.springtest.service.dto.ResponseTransactionDTO;
+import com.example.springtest.repository.UserRepository;
 import com.example.springtest.service.dto.TransDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,33 @@ public class TransService {
     @Autowired
     TransactionRepository transactionRepository;
 
+    @Autowired
+    UserService userService;
+
+    public Transaction mapTransactionDTOToTransaction(TransDTO transDTO) {
+        Transaction transaction = new Transaction();
+        transaction.setAmount(transDTO.getAmount());
+        transaction.setType(transDTO.getType());
+        transaction.setDescription(transDTO.getDescription());
+        transaction.setCategoryName(transDTO.getCategoryName());
+        return transaction;
+    }
+
+    public Transaction saveTransaction(TransDTO transaction, String username) {
+        Transaction saveTransaction = mapTransactionDTOToTransaction(transaction);
+//        save user into transaction then save through repository
+        saveTransaction.setUser(userService.findUser(username));
+
+        return transactionRepository.save(saveTransaction);
+    }
 
 
+    public Transaction updateTransaction(TransDTO transactionDTO, String username) {
+        Transaction updateTransaction = mapTransactionDTOToTransaction(transactionDTO);
+
+        updateTransaction.setUser(userService.findUser(username));
+        return transactionRepository.save(updateTransaction);
+    }
 
 //    /**
 //     * calculate all transaction by userId

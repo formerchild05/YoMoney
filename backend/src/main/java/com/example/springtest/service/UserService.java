@@ -1,16 +1,20 @@
 package com.example.springtest.service;
 
 import com.example.springtest.model.LoginRequest;
+import com.example.springtest.model.entity.Roles;
 import com.example.springtest.model.entity.User;
 import com.example.springtest.repository.UserRepository;
 import com.example.springtest.service.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -25,11 +29,20 @@ public class UserService implements UserDetailsService {
         if (user == null) {
            throw new UsernameNotFoundException(username);
         }
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.getRole().toString()));
+
         return new org.springframework.security.core.userdetails.User(user.getUsername(),
-                user.getPassword(), new ArrayList<>());
+                user.getPassword(), authorities);
 
     }
 
+    public User findUser(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException(username);
+        }
+        return user;
+    }
 
     public User mapUserDTOToUser(UserDTO userDTO) {
         User user = new User();
@@ -37,13 +50,19 @@ public class UserService implements UserDetailsService {
         user.setPassword(userDTO.getPassword());
         user.setEmail(userDTO.getEmail());
         user.setFullName(userDTO.getFullName());
+        user.setRole(userDTO.getRole());
         return user;
     }
 
     public User saveUser(UserDTO user) {
+        user.setRole(Roles.USER);
         return userRepository.save(mapUserDTOToUser(user));
     }
 
+    public User saveAdmin(UserDTO user) {
+        user.setRole(Roles.ADMIN);
+        return userRepository.save(mapUserDTOToUser(user));
+    }
 //    public void updateUser(UserDTO userDTO) {
 //        User user = new User();
 //        user.setEmail(userDTO.getEmail());

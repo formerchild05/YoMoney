@@ -1,5 +1,6 @@
 package com.example.springtest.service.dto;
 
+import com.example.springtest.model.entity.Roles;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ public class UserDTO {
     private String email;
     private String fullName;
     private String password;
-
+    private Roles role;
 
     public UserDTO(String username, String email, String fullName, String password) {
         this.username = username;

@@ -6,14 +6,41 @@ import com.example.springtest.service.dto.TransDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api")
+@RequestMapping("/api/transaction")
 @RestController
 public class Transac {
 
     @Autowired
     TransService transService;
+
+
+
+    @PostMapping("/save")
+    public ResponseEntity<?> saveTransaction(@RequestBody TransDTO transactionDTO, Authentication authentication) {
+        String username = authentication.getName();
+        try {
+            transService.saveTransaction(transactionDTO, username);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Transaction saved successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+
+    @PostMapping("/update")
+    public ResponseEntity<?> updateTransaction(@RequestBody TransDTO transactionDTO, Authentication authentication) {
+        String username = authentication.getName();
+        try {
+            transService.updateTransaction(transactionDTO, username);
+            return ResponseEntity.status(HttpStatus.OK).body("Transaction updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 
 
 //    @GetMapping("/getTransactionAll/{user_id}")

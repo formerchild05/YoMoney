@@ -1,5 +1,5 @@
 package com.example.springtest.model.entity;
 
-public enum CatType {
-    INCOME, EXPENSE
+public enum Roles {
+    ADMIN, USER
 }
