@@ -1,0 +1,29 @@
+.status {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    
+}
+
+
+
+
+
+
+
+/* box area */
+
+.box {
+    display: flex;
+    flex-direction: column;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 20px;
+    padding: 14px;
+}
+
+.top-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

@@ -1,0 +1,45 @@
+.mid {
+
+    display: flex;
+    flex-direction: column;
+    padding-left: 200px;
+    padding-right: 200px;
+}
+
+.container {
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 20px;
+    padding: 14px;
+}
+
+.item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 20px;
+    padding: 14px;
+}
+
+
+
+.itemButton {
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0px;
+}
+
+.itemButton:hover {
+    border-bottom: 1px solid black;
+}
+
+.itemButton:active {
+    color: gray;
+}
