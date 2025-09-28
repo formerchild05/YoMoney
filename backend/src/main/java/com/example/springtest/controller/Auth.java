@@ -37,9 +37,8 @@ public class Auth {
     private JwtUtil jwtUtil;
 
     /**
-     * instead using jwt, use userId to save localstorage ( jwt maby later ??? )
      * @param loginRequest
-     * @return
+     * @return jwt token (JSON format : "token": token)
      * @throws Exception
      */
     @PostMapping("/login")
@@ -52,11 +51,11 @@ public class Auth {
         final UserDetails userDetails = userService.loadUserByUsername(loginRequest.getUsername());
         final String token = jwtUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok().body(token);
+        return ResponseEntity.ok().body(Map.of("token", token));
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", e.getMessage()));
         }
     }
 
@@ -68,7 +67,7 @@ public class Auth {
             return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "Register sucess"));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Username or email already exist"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Username or email already exist"));
         }
     }
 

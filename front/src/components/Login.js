@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { TextField, Button, Paper, Typography, Box } from '@mui/material';
 
 export default function Login() {
+    const [serverError, setServerError] = useState('');
     const [isSignUp, setIsSignUp] = useState(false);
     const [formData, setFormData] = useState({
         firstName: '',
@@ -53,6 +54,9 @@ export default function Login() {
             .then(response => response.json())
             .then(data => {
                 console.log('Success:', data);
+                if (data.error) {
+                    setServerError(data.error);
+                }
             })
             .catch(error => {
 
@@ -62,6 +66,27 @@ export default function Login() {
         } else {
             console.log('Login attempt:', formData);
             // Add your login logic here
+
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: formData.username,
+                    password: formData.password
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                if (data.error) {
+                    setServerError(data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         }
     };
 
@@ -77,6 +102,7 @@ export default function Login() {
                 ...errors,
                 [e.target.name]: ''
             });
+            setServerError('');
         }
     };
 
@@ -91,6 +117,7 @@ export default function Login() {
             confirmPassword: ''
         });
         setErrors({});
+        setServerError(''); 
     };
 
     return (
@@ -143,23 +170,23 @@ export default function Login() {
                     
                     {isSignUp && (
                         <TextField
-                            fullWidth
-                            label="Username"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleChange}
-                            margin="normal"
-                            required
-                            variant="outlined"
-                        />
-                    )}
-                    
-                    <TextField
                         fullWidth
                         label="Email"
                         name="email"
                         type="email"
                         value={formData.email}
+                        onChange={handleChange}
+                        margin="normal"
+                        required
+                        variant="outlined"
+                        />
+                    )}
+                    
+                    <TextField
+                        fullWidth
+                        label="Username"
+                        name="username"
+                        value={formData.username}
                         onChange={handleChange}
                         margin="normal"
                         required
@@ -196,6 +223,13 @@ export default function Login() {
                         />
                     )}
                     
+                    {serverError && (
+                        <Typography variant="body2" color="error" align="center" sx={{ mt: 1 }}>
+                            {serverError}
+                        </Typography>
+                    )}
+
+
                     <Button
                         type="submit"
                         fullWidth
