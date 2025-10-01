@@ -7,6 +7,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 export default function Transaction({ transactions, handleDelete, handleUpdate }) {
     const [openUpdate, setOpenUpdate] = useState(false);
     const [selectedTransactionId, setSelectedTransactionId] = useState(null);
+    
+    // Ensure transactions is an array and provide fallback
+    const transactionList = transactions || [];
 
     const handleOpenUpdate = (id) => {
         setOpenUpdate(true);
@@ -24,7 +27,7 @@ export default function Transaction({ transactions, handleDelete, handleUpdate }
     }
 
     function getDefaultData(Id) {
-        return transactions.find(item => item.id === Id) || null;
+        return transactionList.find(item => item.transId === Id) || null;
     }
     return (
         <div className="mid">
@@ -32,7 +35,7 @@ export default function Transaction({ transactions, handleDelete, handleUpdate }
         
             <ul className="container" style={{ listStyleType: "none"}}>
                 <p>Your History</p>
-                {transactions.map((t, index) => (
+                {transactionList.map((t, index) => (
                     <li className="item" key={index}>   
 
                         {/* <p>{index}</p> */}
@@ -41,8 +44,8 @@ export default function Transaction({ transactions, handleDelete, handleUpdate }
                         <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: "10px" }}>
                                 
                                 <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-                                    <h3 style={{ margin: 0 }}>{t.name}</h3>
-                                    <p style={{ margin: 0 }}>Date : {t.createdate}</p>                            
+                                    <h3 style={{ margin: 0 }}>{t.categoryName}</h3>
+                                    <p style={{ margin: 0 }}>Date : {t.createdAt}</p>                            
                                 </div>     
 
                                 <p>{t.type}</p>        
@@ -53,18 +56,17 @@ export default function Transaction({ transactions, handleDelete, handleUpdate }
                         <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: "5px" }}>
                             
                             {
-                                t.type === "income" ?
+                                t.type === "INCOME" ?
                                 <p style={{ color: "green", margin: 0 }}>+ {Number(t.amount).toLocaleString("vi-VN")} <u>đ</u></p> :
                                 <p style={{ color: "red", margin: 0 }}>- {Number(t.amount).toLocaleString("vi-VN")} <u>đ</u></p>
                             }
 
 
-                            <button className="itemButton" onClick={() => handleOpenUpdate(t.id)}>
+                            <button className="itemButton" onClick={() => handleOpenUpdate(t.transId)}>
                                 <EditIcon sx={{ fontSize: "5" }} />
                                 </button>
 
-
-                            <button className="itemButton" onClick={() => handleDelete(t.id)}>
+                            <button className="itemButton" onClick={() => handleDelete(t.transId)}>
                                 <DeleteIcon sx={{ fontSize: "5" }} />
                             </button>
                         </div>

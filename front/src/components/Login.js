@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { TextField, Button, Paper, Typography, Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
+    const navigate = useNavigate();
     const [serverError, setServerError] = useState('');
     const [isSignUp, setIsSignUp] = useState(false);
     const [formData, setFormData] = useState({
@@ -80,6 +82,11 @@ export default function Login() {
             .then(response => response.json())
             .then(data => {
                 console.log('Success:', data);
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                    // Redirect to main page after successful login
+                    navigate('/main');
+                }
                 if (data.error) {
                     setServerError(data.error);
                 }

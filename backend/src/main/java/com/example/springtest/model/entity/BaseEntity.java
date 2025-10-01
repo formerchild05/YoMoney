@@ -8,6 +8,7 @@ import jakarta.persistence.PreUpdate;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -15,21 +16,21 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 public abstract class BaseEntity {
 
-    @Column(name = "create_at", updatable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "create_at"  )
+    private LocalDate createdAt;
 
     @Column(name = "last_update", updatable = false)
-    private LocalDateTime lastUpdate;
+    private LocalDate lastUpdate;
 
     @PrePersist
     protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.lastUpdate = LocalDateTime.now();
+        this.createdAt = LocalDate.now();
+        this.lastUpdate = LocalDate.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        this.lastUpdate = LocalDateTime.now();
+        this.lastUpdate = LocalDate.now();
     }
 
     public abstract String toString();

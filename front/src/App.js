@@ -9,9 +9,9 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/main" element={<MainPage user={{ name: "John Doe", profilePicture: "image.png" }} />} />
+        <Route path="/main" element={<MainPage />} />
         <Route path="/test" element={<Hello />} />
-
+        <Route path="/" element={<Login />} />
 
       </Routes>
     </BrowserRouter>

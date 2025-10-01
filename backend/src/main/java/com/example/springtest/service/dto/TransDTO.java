@@ -5,12 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Getter
 @Setter
 public class TransDTO {
     Long transactionId;
+    String transId;
     CatType type;
     String categoryName;
     LocalDate createdAt;

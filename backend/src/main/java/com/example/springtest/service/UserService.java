@@ -29,11 +29,14 @@ public class UserService implements UserDetailsService {
         if (user == null) {
            throw new UsernameNotFoundException(username);
         }
-        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.getRole().toString()));
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().toString()));
 
         return new org.springframework.security.core.userdetails.User(user.getUsername(),
                 user.getPassword(), authorities);
 
+    }
+    public String findNameByUsername(String username) {
+        return userRepository.findByUsername(username).getFullName();
     }
 
     public User findUser(String username) {

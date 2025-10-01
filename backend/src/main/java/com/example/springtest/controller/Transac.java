@@ -1,7 +1,8 @@
 package com.example.springtest.controller;
 
+import com.example.springtest.model.entity.Transaction;
 import com.example.springtest.service.TransService;
-import com.example.springtest.service.dto.ResponseTransactionDTO;
+
 import com.example.springtest.service.dto.TransDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @RequestMapping("/api/transaction")
 @RestController
 public class Transac {
@@ -17,91 +21,50 @@ public class Transac {
     @Autowired
     TransService transService;
 
+    @GetMapping()
+    public ResponseEntity<?> transaction(Authentication authentication) {
+        String username = authentication.getName();
+        List<TransDTO> res = transService.getTransactions(username);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
 
-
-    @PostMapping("/save")
+    @PostMapping("/create")
     public ResponseEntity<?> saveTransaction(@RequestBody TransDTO transactionDTO, Authentication authentication) {
         String username = authentication.getName();
         try {
-            transService.saveTransaction(transactionDTO, username);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Transaction saved successfully");
+            TransDTO tr = transService.saveTransaction(transactionDTO, username);
+            Map<String, Object> res = Map.of(
+                    "transactionId", tr.getTransactionId().toString(),
+                    "message", "Transaction created successfully",
+                    "data", tr
+            );
+            return ResponseEntity.status(HttpStatus.CREATED).body(res);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", e.getMessage()));
         }
     }
 
 
-    @PostMapping("/update")
-    public ResponseEntity<?> updateTransaction(@RequestBody TransDTO transactionDTO, Authentication authentication) {
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateTransaction(@PathVariable Long id,
+            @RequestBody TransDTO transactionDTO, Authentication authentication) {
         String username = authentication.getName();
         try {
-            transService.updateTransaction(transactionDTO, username);
-            return ResponseEntity.status(HttpStatus.OK).body("Transaction updated successfully");
+            transService.updateTransaction(transactionDTO, id);
+            return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Transaction updated successfully"));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", e.getMessage()));
         }
     }
 
 
-//    @GetMapping("/getTransactionAll/{user_id}")
-//    public ResponseEntity<?> getTransaction(@PathVariable Long user_id) {
-//        ResponseTransactionDTO res = transService.getTransactionAllByUserId(user_id);
-//        return ResponseEntity.ok().body(res);
-//    }
-//
-//    /**
-//     * body requiered {
-//     *     transaction ID:
-//     *     type:
-//     *     amount:
-//     *     description:
-//     *     categoryName:
-//     * }
-//     * @param user_id
-//     * @param transDTO
-//     * @return
-//     */
-//    @PutMapping("updateTransaction/{user_id}")
-//    public ResponseEntity<?> updateTransaction(@PathVariable Long user_id,
-//                                               @RequestBody TransDTO transDTO
-//                                               ) {
-//        try {
-//            return ResponseEntity.ok().body(transService.updateTransaction(user_id, transDTO));
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
-//
-//    /**
-//     * body required {
-//     *     description :
-//     *     category name:
-//     *     amount:
-//     *     type:
-//     * }
-//     * @param user_id
-//     * @param transDTO
-//     * @return
-//     */
-//    @PostMapping("createTransaction/{user_id}")
-//    public ResponseEntity<?> createTransaction(@PathVariable Long user_id,
-//                                               @RequestBody TransDTO transDTO) {
-//        try {
-//            transService.createTransaction(user_id, transDTO);
-//            return ResponseEntity.ok(HttpStatus.CREATED);
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
-//
-//    /**
-//     * need transaction id to delete
-//     * @param transaction_id
-//     * @return
-//     */
-//    @DeleteMapping("deleteTransaction/{transaction_id}")
-//    public ResponseEntity<?> deleteTransaction(@PathVariable Long transaction_id) {
-//        transService.deleteTransaction(transaction_id);
-//        return ResponseEntity.ok().body("delete Successfully");
-//    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteTransaction(@PathVariable Long id, Authentication authentication) {
+        try {
+            transService.deleteTransaction(id);
+            return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Transaction deleted successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", e.getMessage()));
+        }
+    }
 }

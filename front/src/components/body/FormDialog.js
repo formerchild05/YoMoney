@@ -9,35 +9,31 @@ export default function FormDialog({ open, handleClose, handleSubmit, defaultDat
     const initData = defaultData === null ?
             {
                 name: '',
-                category: '',
+                description: '',
                 amount: '',
                 type: '',
-                createdate: today
+                createdAt: today
             } 
             : 
             {
-                name : defaultData.name,
-                category : defaultData.category,
+                name : defaultData.categoryName,
+                description : defaultData.description,
                 amount : defaultData.amount,
                 type : defaultData.type,
-                createdate : defaultData.createdate
+                createdAt : defaultData.createdAt
             }
     
-        if(defaultData !== null) {
-            {console.log("default ", defaultData)}
-            {console.log("init ", initData)}
-        }
     const [formData, setFormData] = useState(initData);
 
 
     useEffect(() => {
         if (defaultData && open) {
             setFormData({
-                name : defaultData.name,
-                category : defaultData.category,
+                name : defaultData.categoryName,
+                description : defaultData.description,
                 amount : defaultData.amount,
-                type : defaultData.type,
-                createdate : defaultData.createdate
+                type : defaultData.type, // Keep "INCOME" as is
+                createdAt : defaultData.createdAt
             });
         } else if (open && !defaultData) {
             setFormData(initData);
@@ -74,10 +70,10 @@ export default function FormDialog({ open, handleClose, handleSubmit, defaultDat
                         required
                         margin="dense"
                         label="Transaction Category"
-                        value={formData.category}
+                        value={formData.description}
                         fullWidth
                         variant="outlined"
-                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     />
 
                     <TextField
@@ -102,15 +98,15 @@ export default function FormDialog({ open, handleClose, handleSubmit, defaultDat
                         onChange={(e, newType) => setFormData({ ...formData, type: newType })}
                         aria-label='Transaction Type'
                     >
-                        <ToggleButton size='small' value="income">Income</ToggleButton>
-                        <ToggleButton size='small' value="expense">Expense</ToggleButton>
+                        <ToggleButton size='small' value="INCOME">Income</ToggleButton>
+                        <ToggleButton size='small' value="EXPENSE">Expense</ToggleButton>
                     </ToggleButtonGroup>
 
                     <Box display="flex" justifyContent="center" mt={2}>
                     <Input
                         type="date"
-                        value={formData.createdate || today}
-                        onChange={(e) => setFormData({ ...formData, createdate: e.target.value })}
+                        value={formData.createdAt || today}
+                        onChange={(e) => setFormData({ ...formData, createdAt: e.target.value })}
                     />
                     </Box>
                     <DialogActions>
