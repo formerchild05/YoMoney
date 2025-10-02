@@ -1,5 +1,4 @@
 com\example\springtest\repository\UserRepository.class
-com\example\springtest\service\dto\ResponseTransactionDTO.class
 com\example\springtest\controller\Auth.class
 com\example\springtest\service\TransService.class
 com\example\springtest\model\entity\CatType.class

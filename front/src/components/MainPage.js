@@ -2,10 +2,15 @@ import Header from "./header/Header";
 import Revenue from "./body/revenue";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Drawer, IconButton, Divider, Button } from "@mui/material";
+import { Drawer, IconButton, Divider, Button, Link } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
+import SButton from "./But/SButton";
+import GitHubIcon from '@mui/icons-material/GitHub';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import LoButton from "./But/LoButton";
 
 export default function MainPage() {
     const navigate = useNavigate();
@@ -79,10 +84,36 @@ export default function MainPage() {
                 }}>
 
                 {
-                    //Logout button
-                    <Button onClick={handleLogout}>
-                        Logout <LogoutIcon />
-                    </Button>
+                <div style ={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                    <div style={{ flex: 4, alignItems: 'center', justifyContent: 'center', display: 'flex' }}>
+
+                        <LoButton Logout={handleLogout} />
+                    
+                    </div>
+
+                    <div style={{ flex: 4, alignItems: 'flex-end', justifyContent: 'center', display: 'flex' }}>
+                        <SButton />
+                    </div>
+
+                    <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '15px' }}>
+                        <Link href="https://github.com/formerchild05" target="_blank" rel="noopener noreferrer">
+                            <IconButton >
+                                <GitHubIcon />
+                            </IconButton>
+                        </Link>
+                        <Link href="https://www.linkedin.com/in/nam-bui-2843a5321/" target="_blank" rel="noopener noreferrer">
+                            <IconButton>
+                                <LinkedInIcon />
+                            </IconButton>
+                        </Link>
+                        <Link href="https://facebook.com/manh.nam.681993/" target="_blank" rel="noopener noreferrer">
+                            <IconButton>
+                                <FacebookIcon />
+                            </IconButton>
+                        </Link>
+                    </div>
+                
+                </div>
                 }
             
             </Drawer>
