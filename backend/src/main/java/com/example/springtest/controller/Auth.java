@@ -6,6 +6,7 @@ import com.example.springtest.repository.UserRepository;
 import com.example.springtest.security.JwtUtil;
 import com.example.springtest.service.UserService;
 import com.example.springtest.service.dto.UserDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.BeanDefinitionDsl;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-
+@Slf4j
 @RequestMapping("/api/auth")
 @RestController
 public class Auth {
@@ -32,8 +33,6 @@ public class Auth {
     private AuthenticationManager authenticationManager;
     @Autowired
     private UserService userService;
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -56,10 +55,11 @@ public class Auth {
         final UserDetails userDetails = userService.loadUserByUsername(loginRequest.getUsername());
         final String token = jwtUtil.generateToken(userDetails);
 
+        log.info("user login success with token: {}", token);
         return ResponseEntity.ok().body(Map.of("token", token));
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.error("user {} login fail: {}", loginRequest.getUsername(), e.getMessage());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", e.getMessage()));
         }
     }
@@ -69,15 +69,22 @@ public class Auth {
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         try {
             userService.saveUser(userDTO);
+
+            log.info("user register with : {}" + userDTO.getUsername());
+
             return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "Register sucess"));
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.error("user {} register fail: {}", userDTO, e.getMessage());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Username or email already exist"));
         }
     }
 
 
-
+    /**
+     * no log yet
+     * @param userDTO
+     * @return
+     */
     @PostMapping("/registerAdmin")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> registerAdmin(@RequestBody UserDTO userDTO) {
@@ -101,6 +108,8 @@ public class Auth {
 
         userDTO.setRole(roles.get(0));
         userDTO.setFullName(userService.findNameByUsername(authentication.getName()));
+
+        log.info("getUserdetails : {}", userDTO);
         return ResponseEntity.status(HttpStatus.OK).body(userDTO);
     }
 
