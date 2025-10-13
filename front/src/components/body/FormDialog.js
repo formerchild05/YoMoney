@@ -1,27 +1,28 @@
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from '@mui/material';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { Box, Input } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 export default function FormDialog({ open, handleClose, handleSubmit, defaultData}) {
     const today = new Date().toISOString().split("T")[0]; 
 
-    const initData = defaultData === null ?
-            {
+    const initData = useMemo(() => (
+        defaultData === null
+            ? {
                 name: '',
                 description: '',
                 amount: '',
                 type: '',
                 createdAt: today
-            } 
-            : 
-            {
-                name : defaultData.categoryName,
-                description : defaultData.description,
-                amount : defaultData.amount,
-                type : defaultData.type,
-                createdAt : defaultData.createdAt
             }
+            : {
+                name: defaultData.categoryName,
+                description: defaultData.description,
+                amount: defaultData.amount,
+                type: defaultData.type,
+                createdAt: defaultData.createdAt
+            }
+    ), [defaultData, today]);
     
     const [formData, setFormData] = useState(initData);
 
@@ -38,7 +39,7 @@ export default function FormDialog({ open, handleClose, handleSubmit, defaultDat
         } else if (open && !defaultData) {
             setFormData(initData);
         }
-    }, [defaultData, open]);
+    }, [defaultData, open, initData]);
 
     function onSubmit(e) {
         e.preventDefault();
