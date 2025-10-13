@@ -48,9 +48,12 @@ jobs:
         run: mvn clean package -DskipTests
         
       - name: Run Tests
-        run: mvn test -Dspring.datasource.url=jdbc:mysql://127.0.0.1:3306/testdb \
-                      -Dspring.datasource.username=user \
-                      -Dspring.datasource.password=password
+        run: mvn test -Dspring.datasource.url=jdbc:mysql://127.0.0.1:3306/testdb -Dspring.datasource.username=user -Dspring.datasource.password=password
+
+
+
+
+        
   frontend:
     runs-on: ubuntu-latest
     defaults:
