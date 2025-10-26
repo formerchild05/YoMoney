@@ -79,3 +79,13 @@ jobs:
         run: npm run build
       - name: Run Tests
         run: npm test --if-present
+
+      # 🧱 Build & Push Docker image for frontend
+      - name: Build and push frontend image
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          docker build -t $DOCKER_USERNAME/react-frontend:latest .
+          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+          docker push $DOCKER_USERNAME/react-frontend:latest
