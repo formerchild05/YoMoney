@@ -1,9 +1,10 @@
 version: "3.9"
 
 services:
+
   mysql:
     image: mysql:8.0
-    container_name: mysql-container
+    container_name: mysql-expensetrack-container
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: 1234
@@ -11,11 +12,16 @@ services:
     ports:
       - "3306:3306"
     volumes:
-#      - ./expensedmp.sql:/docker-entrypoint-initdb.d/expensedmp.sql
+      - expensetrack-data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-p1234" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
-  springboot:
+  backend:
     build: .
-    container_name: springboot-container
+    container_name: springboot-expensetrack-container
     restart: always
     ports:
       - "8080:8080"
@@ -25,3 +31,24 @@ services:
       SPRING_DATASOURCE_PASSWORD: 1234
     depends_on:
       - mysql
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus-container
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - backend
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana-container
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+volumes:
+  expensetrack-data:
